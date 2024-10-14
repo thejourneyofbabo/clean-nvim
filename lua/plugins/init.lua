@@ -85,7 +85,7 @@ return {
         },
       }
       require('cmp').setup.buffer({
-        sources = { { name = "crates" }}
+        sources = {{ name = "crates" }}
       })
     end
   },
