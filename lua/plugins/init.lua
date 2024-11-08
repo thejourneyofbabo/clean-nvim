@@ -165,13 +165,6 @@ return {
 
   --- for cpp
   {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
-
-  {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
