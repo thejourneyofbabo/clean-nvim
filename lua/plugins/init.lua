@@ -23,8 +23,8 @@ return {
       local codelldb = mason_registry.get_package("codelldb")
       local extension_path = codelldb:get_install_path() .. "/extension/"
       local codelldb_path = extension_path .. "adapter/codelldb"
-      local liblldb_path = extension_path.. "lldb/lib/liblldb.dylib" -- for mac
-      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
+      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.dylib" -- for mac
+      local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
       local cfg = require('rustaceanvim.config')
 
       vim.g.rustaceanvim = {
@@ -161,6 +161,42 @@ return {
     keys = {
         { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     }
+  },
+
+  --- for cpp
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      require "configs.lspconfig"
+    end,
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      require("configs.cmp")
+    end,
+  },
+
+  {
+    "p00f/clangd_extensions.nvim",
+    lazy = true,
+    config = function() end,
+    opts = {
+      inlay_hints = {
+        inline = false,
+      },
+    },
+    ft = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
   },
 
 }

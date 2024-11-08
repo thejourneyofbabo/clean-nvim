@@ -65,3 +65,56 @@ map("n", "<Leader>dus", function()
     sidebar.open(); 
 end, { desc = "Open debugging sidebar" })
 map("n", "<Leader>dx", "<cmd>DapTerminate<CR>", { desc = "Terminate debugger" })
+
+
+-- C++ specific mappings
+map("n", "<Leader>cc", function()
+    local filename = vim.fn.expand('%')
+    local basename = vim.fn.expand('%:r')
+    
+    -- Save the file
+    vim.cmd('write')
+    
+    -- Compile and run in a new terminal
+    vim.cmd('split term://g++ ' .. filename .. ' -o ' .. basename .. ' && ./' .. basename)
+    
+    -- Move to the terminal window
+    vim.cmd('wincmd j')
+    vim.cmd('startinsert')
+end, { desc = "Compile and run C++" })
+
+-- Compile only
+map("n", "<Leader>cb", function()
+    local filename = vim.fn.expand('%')
+    local basename = vim.fn.expand('%:r')
+    
+    -- Save the file
+    vim.cmd('write')
+    
+    -- Compile
+    vim.cmd('!g++ ' .. filename .. ' -o ' .. basename)
+end, { desc = "Compile C++ only" })
+
+-- C++ with debug symbols
+map("n", "<Leader>cd", function()
+    local filename = vim.fn.expand('%')
+    local basename = vim.fn.expand('%:r')
+    
+    -- Save the file
+    vim.cmd('write')
+    
+    -- Compile with debug symbols
+    vim.cmd('!g++ -g ' .. filename .. ' -o ' .. basename)
+end, { desc = "Compile C++ with debug symbols" })
+
+-- C++ with optimization
+map("n", "<Leader>co", function()
+    local filename = vim.fn.expand('%')
+    local basename = vim.fn.expand('%:r')
+    
+    -- Save the file
+    vim.cmd('write')
+    
+    -- Compile with optimization
+    vim.cmd('!g++ -O2 -Wall ' .. filename .. ' -o ' .. basename)
+end, { desc = "Compile C++ with optimization" })
