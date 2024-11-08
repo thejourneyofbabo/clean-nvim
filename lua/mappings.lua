@@ -67,54 +67,69 @@ end, { desc = "Open debugging sidebar" })
 map("n", "<Leader>dx", "<cmd>DapTerminate<CR>", { desc = "Terminate debugger" })
 
 
+
 -- C++ specific mappings
 map("n", "<Leader>cc", function()
-    local filename = vim.fn.expand('%')
-    local basename = vim.fn.expand('%:r')
-    
+    local filename = vim.fn.expand('%:p')        -- Get full path
+    local basename = vim.fn.expand('%:p:r')      -- Get full path without extension
+    local directory = vim.fn.expand('%:p:h')     -- Get directory
+
     -- Save the file
     vim.cmd('write')
+
+    -- Change to file's directory and execute
+    vim.cmd(string.format('new | terminal cd %s && g++ %s -o %s && %s', 
+        vim.fn.shellescape(directory),
+        vim.fn.shellescape(filename),
+        vim.fn.shellescape(basename),
+        vim.fn.shellescape(basename)
+    ))
     
-    -- Compile and run in a new terminal
-    vim.cmd('split term://g++ ' .. filename .. ' -o ' .. basename .. ' && ./' .. basename)
-    
-    -- Move to the terminal window
-    vim.cmd('wincmd j')
+    -- Enter insert mode in terminal
     vim.cmd('startinsert')
 end, { desc = "Compile and run C++" })
 
 -- Compile only
 map("n", "<Leader>cb", function()
-    local filename = vim.fn.expand('%')
-    local basename = vim.fn.expand('%:r')
+    local filename = vim.fn.expand('%:p')
+    local basename = vim.fn.expand('%:p:r')
     
     -- Save the file
     vim.cmd('write')
     
     -- Compile
-    vim.cmd('!g++ ' .. filename .. ' -o ' .. basename)
+    vim.cmd(string.format('!g++ %s -o %s', 
+        vim.fn.shellescape(filename),
+        vim.fn.shellescape(basename)
+    ))
 end, { desc = "Compile C++ only" })
 
 -- C++ with debug symbols
 map("n", "<Leader>cd", function()
-    local filename = vim.fn.expand('%')
-    local basename = vim.fn.expand('%:r')
+    local filename = vim.fn.expand('%:p')
+    local basename = vim.fn.expand('%:p:r')
     
     -- Save the file
     vim.cmd('write')
     
     -- Compile with debug symbols
-    vim.cmd('!g++ -g ' .. filename .. ' -o ' .. basename)
+    vim.cmd(string.format('!g++ -g %s -o %s', 
+        vim.fn.shellescape(filename),
+        vim.fn.shellescape(basename)
+    ))
 end, { desc = "Compile C++ with debug symbols" })
 
 -- C++ with optimization
 map("n", "<Leader>co", function()
-    local filename = vim.fn.expand('%')
-    local basename = vim.fn.expand('%:r')
+    local filename = vim.fn.expand('%:p')
+    local basename = vim.fn.expand('%:p:r')
     
     -- Save the file
     vim.cmd('write')
     
     -- Compile with optimization
-    vim.cmd('!g++ -O2 -Wall ' .. filename .. ' -o ' .. basename)
+    vim.cmd(string.format('!g++ -O2 -Wall %s -o %s', 
+        vim.fn.shellescape(filename),
+        vim.fn.shellescape(basename)
+    ))
 end, { desc = "Compile C++ with optimization" })
