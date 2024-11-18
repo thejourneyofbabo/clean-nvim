@@ -1,6 +1,21 @@
 vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
 vim.g.mapleader = " "
 
+  --- for copy & paste / ssh
+  --- ssh -R 2489:127.0.0.1:2489 -p <SSH_PORT> <USER>@<HOST>
+vim.g.clipboard = {
+  name = 'lemonade',
+  copy = {
+    ['+'] = 'lemonade copy',
+    ['*'] = 'lemonade copy',
+  },
+  paste = {
+    ['+'] = 'lemonade paste',
+    ['*'] = 'lemonade paste',
+  },
+  cache_enabled = 1,
+}
+
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
