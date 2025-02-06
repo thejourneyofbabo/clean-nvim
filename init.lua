@@ -3,33 +3,18 @@ vim.g.mapleader = " "
 
   --- for copy & paste / ssh
   --- ssh -R 2489:127.0.0.1:2489 -p <SSH_PORT> <USER>@<HOST>
-if vim.env.SSH_CONNECTION then
-  vim.g.clipboard = {
-    name = 'lemonade',
-    copy = {
-      ['+'] = 'lemonade copy',
-      ['*'] = 'lemonade copy',
-    },
-    paste = {
-      ['+'] = 'lemonade paste',
-      ['*'] = 'lemonade paste',
-    },
-    cache_enabled = 1,
-  }
-else
-  vim.g.clipboard = {
-    name = 'system_clipboard',
-    copy = {
-      ['+'] = 'xclip -selection clipboard -in',
-      ['*'] = 'xclip -selection primary -in',
-    },
-    paste = {
-      ['+'] = 'xclip -selection clipboard -out',
-      ['*'] = 'xclip -selection primary -out',
-    },
-    cache_enabled = 1,
-  }
-end
+vim.g.clipboard = {
+  name = 'system_clipboard',
+  copy = {
+    ['+'] = 'xclip -selection clipboard -in',
+    ['*'] = 'xclip -selection primary -in',
+  },
+  paste = {
+    ['+'] = 'xclip -selection clipboard -out',
+    ['*'] = 'xclip -selection primary -out',
+  },
+  cache_enabled = 1,
+}
 
 
 -- bootstrap lazy and all plugins
