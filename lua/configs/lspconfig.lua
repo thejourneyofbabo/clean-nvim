@@ -44,7 +44,7 @@ lspconfig.clangd.setup {
     "--header-insertion=iwyu",
     "--completion-style=detailed",
     "--function-arg-placeholders",
-    "--fallback-style=llvm",
+    "--fallback-style=microsoft",
   },
   filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 }
