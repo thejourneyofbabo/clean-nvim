@@ -1,7 +1,7 @@
 return {
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre", -- uncomment for format on save
     opts = require "configs.conform",
   },
 
@@ -14,18 +14,18 @@ return {
   },
 
   {
-    'mrcjkb/rustaceanvim',
-    version = '^5', -- Recommended
+    "mrcjkb/rustaceanvim",
+    version = "^5", -- Recommended
     lazy = false, -- This plugin is already lazy
     ft = "rust",
-    config = function ()
-      local mason_registry = require('mason-registry')
-      local codelldb = mason_registry.get_package("codelldb")
+    config = function()
+      local mason_registry = require "mason-registry"
+      local codelldb = mason_registry.get_package "codelldb"
       local extension_path = codelldb:get_install_path() .. "/extension/"
       local codelldb_path = extension_path .. "adapter/codelldb"
-      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.dylib" -- for mac
-      local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
-      local cfg = require('rustaceanvim.config')
+      local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib" -- for mac
+      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
+      local cfg = require "rustaceanvim.config"
 
       vim.g.rustaceanvim = {
         dap = {
@@ -33,23 +33,22 @@ return {
         },
       }
 
-      vim.keymap.set('n', '<space>k', '<Plug>RustHoverAction', { noremap = true, silent = true })
-
-    end
+      vim.keymap.set("n", "<space>k", "<Plug>RustHoverAction", { noremap = true, silent = true })
+    end,
   },
 
   {
-    'rust-lang/rust.vim',
+    "rust-lang/rust.vim",
     ft = "rust",
-    init = function ()
+    init = function()
       vim.g.rustfmt_autosave = 1
-    end
+    end,
   },
 
   {
-    'mfussenegger/nvim-dap',
+    "mfussenegger/nvim-dap",
     config = function()
-			local dap, dapui = require("dap"), require("dapui")
+      local dap, dapui = require "dap", require "dapui"
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
       end
@@ -62,41 +61,41 @@ return {
       dap.listeners.before.event_exited.dapui_config = function()
         dapui.close()
       end
-		end,
+    end,
   },
 
   {
-    'rcarriga/nvim-dap-ui',
-    dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"},
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     config = function()
-			require("dapui").setup()
-		end,
+      require("dapui").setup()
+    end,
   },
 
   {
-    'saecki/crates.nvim',
-    tag = 'stable',
-    ft = {"rust", "toml"},
+    "saecki/crates.nvim",
+    tag = "stable",
+    ft = { "rust", "toml" },
     config = function(_, opts)
-        local crates = require('crates')
-        crates.setup(opts)
-        crates.show()
+      local crates = require "crates"
+      crates.setup(opts)
+      crates.show()
     end,
   },
 
   -- Neotest and Navigation Plugins
   {
     "nvim-neotest/nvim-nio",
-    lazy = false
+    lazy = false,
   },
   {
-    'rmagatti/goto-preview',
+    "rmagatti/goto-preview",
     lazy = false,
     config = function()
-      require('goto-preview').setup{
-        default_mappings = true
+      require("goto-preview").setup {
+        default_mappings = true,
       }
-    end
+    end,
   },
   {
     "christoomey/vim-tmux-navigator",
@@ -120,24 +119,24 @@ return {
 
   -- Code Structure and Documentation Navigation
   {
-    'stevearc/aerial.nvim',
+    "stevearc/aerial.nvim",
     opts = {},
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons"
+      "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("aerial").setup({
+      require("aerial").setup {
         on_attach = function(bufnr)
           -- Jump forwards/backwards with '{' and '}'
           vim.keymap.set("n", "}", "<cmd>AerialPrev<CR>", { buffer = bufnr })
           vim.keymap.set("n", "{", "<cmd>AerialNext<CR>", { buffer = bufnr })
         end,
-      })
+      }
       -- Keymap to toggle aerial
       vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
     end,
-    lazy = false
+    lazy = false,
   },
 
   -- Git GUI
@@ -146,21 +145,21 @@ return {
     "kdheepak/lazygit.nvim",
     lazy = true,
     cmd = {
-        "LazyGit",
-        "LazyGitConfig",
-        "LazyGitCurrentFile",
-        "LazyGitFilter",
-        "LazyGitFilterCurrentFile",
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
     },
     -- optional for floating window border decoration
     dependencies = {
-        "nvim-lua/plenary.nvim",
+      "nvim-lua/plenary.nvim",
     },
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
-        { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
-    }
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
   },
 
   --- for cpp
@@ -176,7 +175,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
     },
     config = function()
-      require("configs.cmp")
+      require "configs.cmp"
     end,
   },
 
@@ -191,9 +190,7 @@ return {
     },
     ft = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
   },
-
 }
-
 
 -- ensure_installed = {
 --         --"rust-analyzer",
@@ -207,13 +204,12 @@ return {
 --         "clang-format",
 --         "codelldb",
 
-
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+-- {
+-- 	"nvim-treesitter/nvim-treesitter",
+-- 	opts = {
+-- 		ensure_installed = {
+-- 			"vim", "lua", "vimdoc",
+--      "html", "css"
+-- 		},
+-- 	},
+-- },
