@@ -23,8 +23,8 @@ return {
       local codelldb = mason_registry.get_package("codelldb")
       local extension_path = codelldb:get_install_path() .. "/extension/"
       local codelldb_path = extension_path .. "adapter/codelldb"
-      local liblldb_path = extension_path.. "lldb/lib/liblldb.dylib" -- for mac
-      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
+      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.dylib" -- for mac
+      local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
       local cfg = require('rustaceanvim.config')
 
       vim.g.rustaceanvim = {
@@ -164,13 +164,6 @@ return {
   },
 
   --- for cpp
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
-
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
