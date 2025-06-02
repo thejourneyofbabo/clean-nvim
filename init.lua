@@ -3,31 +3,31 @@ vim.g.mapleader = " "
 
 --- for copy & paste / ssh
 --- ssh -R 2489:127.0.0.1:2489 -p <SSH_PORT> <USER>@<HOST>
--- vim.g.clipboard = {
---   name = "ubuntu_clipboard",
---   copy = {
---     ["+"] = "xclip -selection clipboard -in",
---     ["*"] = "xclip -selection primary -in",
---   },
---   paste = {
---     ["+"] = "xclip -selection clipboard -out",
---     ["*"] = "xclip -selection primary -out",
---   },
---   cache_enabled = 1,
--- }
-
 vim.g.clipboard = {
-  name = "macOS-clipboard",
+  name = "ubuntu_clipboard",
   copy = {
-    ["+"] = "pbcopy",
-    ["*"] = "pbcopy",
+    ["+"] = "xclip -selection clipboard -in",
+    ["*"] = "xclip -selection primary -in",
   },
   paste = {
-    ["+"] = "pbpaste",
-    ["*"] = "pbpaste",
+    ["+"] = "xclip -selection clipboard -out",
+    ["*"] = "xclip -selection primary -out",
   },
-  cache_enabled = 0,
+  cache_enabled = 1,
 }
+
+-- vim.g.clipboard = {
+--   name = "macOS-clipboard",
+--   copy = {
+--     ["+"] = "pbcopy",
+--     ["*"] = "pbcopy",
+--   },
+--   paste = {
+--     ["+"] = "pbpaste",
+--     ["*"] = "pbpaste",
+--   },
+--   cache_enabled = 0,
+-- }
 
 -- bootstrap lazy and all plugins
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
