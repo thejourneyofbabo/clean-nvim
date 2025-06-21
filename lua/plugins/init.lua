@@ -19,21 +19,11 @@ return {
     lazy = false, -- This plugin is already lazy
     ft = "rust",
     config = function()
-      local mason_registry = require "mason-registry"
-      local codelldb = mason_registry.get_package "codelldb"
-      local extension_path = codelldb:get_install_path() .. "/extension/"
-      local codelldb_path = extension_path .. "adapter/codelldb"
-      local liblldb_path = extension_path .. "lldb/lib/liblldb.dylib" -- for mac
-      -- local liblldb_path = extension_path.. "lldb/lib/liblldb.so" -- for ubuntu
-      local cfg = require "rustaceanvim.config"
-
       vim.g.rustaceanvim = {
-        dap = {
-          adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
-        },
+        -- Let rustaceanvim handle everything automatically
       }
 
-      vim.keymap.set("n", "<space>k", "<Plug>RustHoverAction", { noremap = true, silent = true })
+      vim.keymap.set("n", "<space>k", "<Cmd>RustLsp hover actions<CR>", { noremap = true, silent = true })
     end,
   },
 
@@ -72,17 +62,35 @@ return {
     end,
   },
 
+  -- {
+  --   "saecki/crates.nvim",
+  --   tag = "stable",
+  --   ft = { "rust", "toml" },
+  --   requires = { "nvim-lua/plenary.nvim" },
+  --   config = function(_, opts)
+  --     local crates = require "crates"
+  --     crates.setup(opts)
+  --     -- crates.show()
+  --   end,
+  -- },
+
   {
     "saecki/crates.nvim",
     tag = "stable",
     ft = { "rust", "toml" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function(_, opts)
-      local crates = require "crates"
-      crates.setup(opts)
-      crates.show()
+      require("crates").setup {
+        null_ls = {
+          enabled = true,
+          name = "crates.nvim",
+        },
+        popup = {
+          autofocus = false,
+        },
+      }
     end,
   },
-
   -- Neotest and Navigation Plugins
   {
     "nvim-neotest/nvim-nio",
