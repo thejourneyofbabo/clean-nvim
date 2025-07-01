@@ -1,11 +1,13 @@
--- load defaults i.e lua_lsp
+-- lspconfig.lua
+
+-- load defaults i.e lua_ls-- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
+
 local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 
 -- lsps with default config
 local servers = { "html", "cssls" }
-
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = nvlsp.on_attach,
@@ -24,16 +26,20 @@ lspconfig.pyright.setup {
 -- Enhanced Clangd configuration
 lspconfig.clangd.setup {
   on_attach = function(client, bufnr)
+    -- Disable signature help provider
+    client.server_capabilities.signatureHelpProvider = false
+
+    -- Apply nvlsp on_attach
     nvlsp.on_attach(client, bufnr)
-    
+
     -- Additional keymaps for C/C++ (using different key than 'K')
-    local opts = { noremap=true, silent=true, buffer=bufnr }
-    vim.keymap.set('n', '<leader>h', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
-    vim.keymap.set('n', '<leader>st', '<cmd>ClangdAST<cr>', opts)
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set("n", "<leader>h", "<cmd>ClangdSwitchSourceHeader<cr>", opts)
+    vim.keymap.set("n", "<leader>st", "<cmd>ClangdAST<cr>", opts)
     -- Use Alt+k for C++ hover instead of K
-    vim.keymap.set('n', '<A-k>', vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<A-k>", vim.lsp.buf.hover, opts)
     -- Or use leader key
-    vim.keymap.set('n', '<leader>k', vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, opts)
   end,
   capabilities = nvlsp.capabilities,
   cmd = {

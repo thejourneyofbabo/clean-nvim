@@ -1,3 +1,5 @@
+-- init.lua
+
 return {
   {
     "stevearc/conform.nvim",
@@ -5,7 +7,7 @@ return {
     opts = require "configs.conform",
   },
 
-  -- These are some examples, uncomment them if you want to see them work!
+  -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -13,6 +15,25 @@ return {
     end,
   },
 
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "rust-analyzer",
+        "lua-language-server",
+        "pyright",
+        "black",
+        "debugpy",
+        "mypy",
+        -- "ruff",  -- Removed temporarily due to loading issues
+        "clangd",
+        "clang-format",
+        "codelldb",
+      },
+    },
+  },
+
+  -- Rust Configuration
   {
     "mrcjkb/rustaceanvim",
     version = "^5", -- Recommended
@@ -35,30 +56,67 @@ return {
     end,
   },
 
+  -- Debug Adapter Protocol (DAP) Configuration
   {
     "mfussenegger/nvim-dap",
     config = function()
-      local dap, dapui = require "dap", require "dapui"
-      dap.listeners.before.attach.dapui_config = function()
+      -- DAP configuration without keymaps (keymaps are in mappings.lua)
+      local dap = require "dap"
+      -- Additional DAP setup can go here if needed
+    end,
+  },
+
+  {
+    "rcarriga/nvim-dap-ui",
+    event = "VeryLazy",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function()
+      local dap = require "dap"
+      local dapui = require "dapui"
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
-      dap.listeners.before.launch.dapui_config = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated.dapui_config = function()
+      dap.listeners.before.event_terminated["dapui_config"] = function()
         dapui.close()
       end
-      dap.listeners.before.event_exited.dapui_config = function()
+      dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
       end
     end,
   },
 
   {
-    "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
-    config = function()
-      require("dapui").setup()
+    "jay-babu/mason-nvim-dap.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    opts = {
+      handlers = {},
+    },
+  },
+
+  {
+    "mfussenegger/nvim-dap-python",
+    ft = "python",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "rcarriga/nvim-dap-ui",
+    },
+    config = function(_, opts)
+      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+      require("dap-python").setup(path)
+      -- Uncomment this line if you have the mappings file
+      -- require("core.utils").load_mappings("dap_python")
+    end,
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    event = "VeryLazy",
+    opts = function()
+      return require "configs.null-ls"
     end,
   },
 
@@ -72,7 +130,7 @@ return {
     end,
   },
 
-  -- Neotest and Navigation Plugins
+  -- Navigation and Preview Plugins
   {
     "nvim-neotest/nvim-nio",
     lazy = false,
@@ -89,21 +147,6 @@ return {
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
-  },
-
-  -- DAP (Debug Adapter Protocol) Plugins
-  {
-    "mfussenegger/nvim-dap-python",
-    ft = "python",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-      "rcarriga/nvim-dap-ui",
-    },
-    config = function(_, opts)
-      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
-      require("dap-python").setup(path)
-      -- require("core.utils").load_mappings("dap_python")
-    end,
   },
 
   -- Code Structure and Documentation Navigation
@@ -129,7 +172,6 @@ return {
   },
 
   -- Git GUI
-  -- nvim v0.8.0
   {
     "kdheepak/lazygit.nvim",
     lazy = true,
@@ -140,18 +182,15 @@ return {
       "LazyGitFilter",
       "LazyGitFilterCurrentFile",
     },
-    -- optional for floating window border decoration
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
     keys = {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
     },
   },
 
-  --- for cpp
+  -- C/C++ Configuration
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
@@ -180,25 +219,3 @@ return {
     ft = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
   },
 }
-
--- ensure_installed = {
---         --"rust-analyzer",
---         "lua-language-server",
---         "pyright",
---         "black",
---         "debugpy",
---         "mypy",
---         "ruff",
---         "clangd",
---         "clang-format",
---         "codelldb",
-
--- {
--- 	"nvim-treesitter/nvim-treesitter",
--- 	opts = {
--- 		ensure_installed = {
--- 			"vim", "lua", "vimdoc",
---      "html", "css"
--- 		},
--- 	},
--- },
