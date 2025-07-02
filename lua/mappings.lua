@@ -72,6 +72,86 @@ map("n", "<Leader>dpr", function()
   require("dap-python").test_method()
 end, { desc = "Test Python method" })
 
+-- Run entire Python file
+-- map("n", "<Leader>pr", function()
+--   vim.cmd "!python3 %"
+-- end, { desc = "Run Python file" })
+
+-- Run entire Python file
+map("n", "<Leader>pr", function()
+  vim.cmd("split | terminal python3 " .. vim.fn.expand "%")
+end, { desc = "Run Python file" })
+
+-- Run current line with buffer context and show buffer
+map("n", "<Leader>pl", function()
+  local line = vim.fn.getline "."
+
+  -- Initialize buffer if not exists
+  if not _G.python_buffer then
+    _G.python_buffer = {}
+  end
+
+  -- Add current line to buffer
+  table.insert(_G.python_buffer, line)
+
+  -- Show buffer content
+  print "Python buffer:"
+  for i, buf_line in ipairs(_G.python_buffer) do
+    print(i .. ": " .. buf_line)
+  end
+
+  -- Create temp file and run in terminal
+  local temp_file = vim.fn.tempname() .. ".py"
+  vim.fn.writefile(_G.python_buffer, temp_file)
+  vim.cmd("split | terminal python3 " .. temp_file .. "; rm " .. temp_file)
+end, { desc = "Run current line with context" })
+
+-- Run from last executed line to current line (incremental)
+map("n", "<Leader>pll", function()
+  local current_line = vim.fn.line "."
+
+  -- Initialize buffer and last line tracker
+  if not _G.python_buffer then
+    _G.python_buffer = {}
+  end
+  if not _G.last_executed_line then
+    _G.last_executed_line = 0
+  end
+
+  -- Get lines from last executed to current
+  local start_line = _G.last_executed_line + 1
+  local new_lines = vim.fn.getline(start_line, current_line)
+
+  -- Ensure new_lines is always a table
+  if type(new_lines) == "string" then
+    new_lines = { new_lines }
+  end
+
+  -- Add new lines to buffer
+  for _, line in ipairs(new_lines) do
+    table.insert(_G.python_buffer, line)
+  end
+
+  -- Update last executed line
+  _G.last_executed_line = current_line
+
+  -- Show what was added and run in terminal
+  print("Added lines " .. start_line .. " to " .. current_line .. " to buffer")
+  local temp_file = vim.fn.tempname() .. ".py"
+  vim.fn.writefile(_G.python_buffer, temp_file)
+  vim.cmd("split | terminal python3 " .. temp_file .. "; rm " .. temp_file)
+end, { desc = "Run from last to current line" })
+
+-- Clear Python buffer
+map("n", "<Leader>pc", function()
+  _G.python_buffer = {}
+  _G.last_executed_line = 0
+  print "Python buffer cleared"
+end, { desc = "Clear Python buffer" })
+
+-- Terminal mode: ESC to close terminal
+map("t", "<Esc>", "<C-\\><C-n>:q<CR>", { desc = "Close terminal with ESC" })
+
 -- DAP Miscellaneous
 map("n", "<Leader>dus", function()
   local widgets = require "dap.ui.widgets"
