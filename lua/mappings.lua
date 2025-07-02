@@ -107,7 +107,7 @@ map("n", "<Leader>pl", function()
 end, { desc = "Run current line with context" })
 
 -- Run from last executed line to current line (incremental)
-map("n", "<Leader>pll", function()
+map("n", "<Leader>plu", function()
   local current_line = vim.fn.line "."
 
   -- Initialize buffer and last line tracker
@@ -141,6 +141,39 @@ map("n", "<Leader>pll", function()
   vim.fn.writefile(_G.python_buffer, temp_file)
   vim.cmd("split | terminal python3 " .. temp_file .. "; rm " .. temp_file)
 end, { desc = "Run from last to current line" })
+
+-- Run from current line to end of file
+map("n", "<Leader>pld", function()
+  local current_line = vim.fn.line "."
+  local last_line = vim.fn.line "$"
+
+  -- Initialize buffer if not exists
+  if not _G.python_buffer then
+    _G.python_buffer = {}
+  end
+
+  -- Get lines from current to end
+  local new_lines = vim.fn.getline(current_line, last_line)
+
+  -- Ensure new_lines is always a table
+  if type(new_lines) == "string" then
+    new_lines = { new_lines }
+  end
+
+  -- Add new lines to buffer
+  for _, line in ipairs(new_lines) do
+    table.insert(_G.python_buffer, line)
+  end
+
+  -- Update last executed line to end
+  _G.last_executed_line = last_line
+
+  -- Show what was added and run in terminal
+  print("Added lines " .. current_line .. " to " .. last_line .. " to buffer")
+  local temp_file = vim.fn.tempname() .. ".py"
+  vim.fn.writefile(_G.python_buffer, temp_file)
+  vim.cmd("split | terminal python3 " .. temp_file .. "; rm " .. temp_file)
+end, { desc = "Run from current line to end" })
 
 -- Clear Python buffer
 map("n", "<Leader>pc", function()
