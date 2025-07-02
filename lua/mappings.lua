@@ -149,9 +149,6 @@ map("n", "<Leader>pc", function()
   print "Python buffer cleared"
 end, { desc = "Clear Python buffer" })
 
--- Terminal mode: ESC to close terminal
-map("t", "<Esc>", "<C-\\><C-n>:q<CR>", { desc = "Close terminal with ESC" })
-
 -- DAP Miscellaneous
 map("n", "<Leader>dus", function()
   local widgets = require "dap.ui.widgets"
